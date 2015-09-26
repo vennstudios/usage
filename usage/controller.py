@@ -1,25 +1,33 @@
 import psutil
 import model
+import view #will probably be removed
 
 def readUsage():
-	cpuUsage = psutil.cpu_percent(interval=0.1, percpu=False)
+	"""
+	Uses psutil to get CPU and RAM usage percentages
+	"""
+	cpuUsage = ('CPU', psutil.cpu_percent(interval=0.1, percpu=False))
 	memory = psutil.virtual_memory()
-	ramUsage = memory.percent
+	ramUsage = ('RAM', memory.percent)
 
 	return [cpuUsage, ramUsage]
 
-def updateModelObject(modelObject):
+def updateModel(modelObject):
+	"""
+	Uses readUsage to update the current model.data
+	"""
 	updateList = readUsage()
-	print  ##
+	modelObject.data = {}
 	for item in updateList:
-		pass """add code here that loops through the updateList adding 
-		its values to the corresponding items in aModel.data"""
+		modelObject.data[item[0]] = item[1]
+		
 
-def updateView():
-	pass
+
+def renderView(modelObject):
+	print modelObject.data
 
 
 if __name__ == "__main__":
 	aModel = model.Model()
-	updateModelObject(aModel)
-	print aModel.data ##
+	updateModel(aModel)
+	renderView(aModel)
