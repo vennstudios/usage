@@ -1,7 +1,7 @@
 import psutil
 import view
 
-class Usage(object):
+class Reader(object):
 
 	def __init__(self):
 		self.data=self.readUsage()
@@ -16,19 +16,9 @@ class Usage(object):
 
 		return [ramUsage, cpuUsage]
 
-	def updateViewData(self):
-		"""
-		Uses readUsage to update the current model.data. Returns the same values as readUsage.
-		"""
-		updateList = self.readUsage()
-		for item in updateList:
-			pass
-
-
-
 def main():
-	usageObj = Usage()
-	view.main(usageObj)
+	readerObj = Reader()
+	view.main(readerObj)
 
 if __name__ == '__main__':
 	main()
