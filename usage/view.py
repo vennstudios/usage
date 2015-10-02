@@ -5,14 +5,19 @@ from PySide import QtGui, QtCore
 class Example(QtGui.QWidget):
 
 	def __init__(self,usageObj):
-		super(Example, self).__init__()
+		super(Window, self).__init__()
 		self.usageObj=usageObj
-		self.initUI()
 
-	def initUI(self):
+		self.initUI(usageObj)
 
-		ramLabel = QtGui.QLabel('RAM')
-		cpuLabel = QtGui.QLabel('CPU')
+
+	def initUI(self, usageObj):
+
+		ramLabel = QtGui.QLabel(usageObj.data[0][0])
+		cpuLabel = QtGui.QLabel(usageObj.data[1][0])
+
+		ramUsage = QtGui.QLabel(str(usageObj.data[0][1]))
+		cpuUsage = QtGui.QLabel(str(usageObj.data[1][1]))
 
 		refreshBtn = QtGui.QPushButton('Refresh')
 		quitBtn = QtGui.QPushButton('Quit',self)
@@ -21,13 +26,16 @@ class Example(QtGui.QWidget):
 		quitBtn.setShortcut('Q')
 
 		quitBtn.clicked.connect(QtCore.QCoreApplication.instance().quit)
-		refreshBtn.clicked.connect(self.initDataViz)
+		#refreshBtn.clicked.connect(data)
 		
 		grid = QtGui.QGridLayout()
 		grid.setSpacing(10)
 
-		grid.addWidget(ramLabel, 1, 0)
-		grid.addWidget(cpuLabel, 1, 1)
+		grid.addWidget(ramLabel, 0, 0)
+		grid.addWidget(cpuLabel, 0, 1)
+
+		grid.addWidget(ramUsage, 1, 0)
+		grid.addWidget(cpuUsage, 1, 1)
 
 		grid.addWidget(quitBtn,2,0)
 		grid.addWidget(refreshBtn,2,1)
@@ -37,14 +45,6 @@ class Example(QtGui.QWidget):
 		self.setGeometry(300,300,350,300)
 		self.setWindowTitle('Usage')
 		self.show()
-
-	
-	def initDataViz(self):
-		pass
-	# 	data = self.usageObj.updateModel()
-	# 	ramUsage = QtGui.QLabel(str(data[0][0]))
-	# 	cpuUsage = QtGui.QLabel(str(data[1][0]))
-
 
 
 def main(usageObj):

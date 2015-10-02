@@ -1,12 +1,10 @@
 import psutil
-import model
 import view
 
 class Usage(object):
 
 	def __init__(self):
-		self.aModel=model.Model()
-		self.updateModel()
+		self.data=self.readUsage()
 
 	def readUsage(self):
 		"""
@@ -16,19 +14,16 @@ class Usage(object):
 		memory = psutil.virtual_memory()
 		ramUsage = ('RAM', memory.percent)
 
-		return [cpuUsage, ramUsage]
+		return [ramUsage, cpuUsage]
 
-	def updateModel(self):
+	def updateViewData(self):
 		"""
 		Uses readUsage to update the current model.data. Returns the same values as readUsage.
 		"""
 		updateList = self.readUsage()
-		self.aModel.data = {}
 		for item in updateList:
-			self.aModel.data[item[0]] = item[1]
+			pass
 
-		return updateList
-			
 
 
 def main():
