@@ -4,7 +4,7 @@ from PySide import QtGui, QtCore
 
 class Viewer(QtGui.QWidget):
 
-	def __init__(self,readerObj):
+	def __init__(self,readerObj):	
 		super(Viewer, self).__init__()
 		
 		self.readerObj = readerObj
@@ -13,35 +13,27 @@ class Viewer(QtGui.QWidget):
 
 	def initUI(self):
 
-		self.grid = QtGui.QGridLayout()
-		self.grid.setSpacing(10)
-
-		self.titleLabel = QtGui.QLabel("usage")
-		self.titleLabel.setAlignment(QtCore.Qt.AlignCenter)
+		titleLabel = QtGui.QLabel("usage",self) 
+		titleLabel.setAlignment(QtCore.Qt.AlignCenter) 
+		titleLabel.move(155,8)
 
 		self.initData()
 
-		refreshBtn = QtGui.QPushButton('Refresh')
-		quitBtn = QtGui.QPushButton('Quit',self)
+		self.ramLabel.move(76, 60)
+		self.cpuLabel.move(236,60)	
 
+		refreshBtn = QtGui.QPushButton('Refresh',self)
+		quitBtn = QtGui.QPushButton('Quit',self)
 		refreshBtn.setShortcut('Ctrl+R')
 		quitBtn.setShortcut('Ctrl+Q')
 		refreshBtn.setToolTip('Cmd+R')
 		quitBtn.setToolTip('Cmd+Q')
+		refreshBtn.move(190, 250)
+		quitBtn.move(80,250)
 
 		quitBtn.clicked.connect(QtCore.QCoreApplication.instance().quit)
-		refreshBtn.clicked.connect(self.refreshData) 
+		refreshBtn.clicked.connect(self.update) 
 
-		self.grid.addWidget(self.ramLabel, 0, 0)
-		self.grid.addWidget(self.cpuLabel, 0, 1)
-
-		self.grid.addWidget(self.ramUsage, 1, 0)
-		self.grid.addWidget(self.cpuUsage, 1, 1)
-
-		self.grid.addWidget(quitBtn,2,0)
-		self.grid.addWidget(refreshBtn,2,1)
-
-		self.setLayout(self.grid)
 
 		self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
 		self.setStyleSheet("""
@@ -63,6 +55,7 @@ class Viewer(QtGui.QWidget):
                 border: 1px solid rgba(188, 188, 188, 130);
                 border-radius: 3px;
                 max-width: 5em;
+                min-width: 5em;
                 padding: 6px;
                 }
                 QPushButton:pressed
@@ -75,33 +68,48 @@ class Viewer(QtGui.QWidget):
                 padding: 6px;
                 }
              """)
+
 		self.setGeometry(50,50,350,300)
 		self.setWindowTitle('Usage')
 		self.show()
 
 
 	def initData(self):
-		self.ramUsage = QtGui.QLabel("")
-		self.cpuUsage = QtGui.QLabel("")
-		self.ramUsage.setAlignment(QtCore.Qt.AlignCenter)
-		self.cpuUsage.setAlignment(QtCore.Qt.AlignCenter)
 
 		self.refreshData()
 
-		self.ramLabel = QtGui.QLabel(self.data[0][0])
-		self.cpuLabel = QtGui.QLabel(self.data[1][0])
-		self.ramLabel.setAlignment(QtCore.Qt.AlignCenter)
-		self.cpuLabel.setAlignment(QtCore.Qt.AlignCenter)
+		self.ramLabel = QtGui.QLabel(self.data[0][0], self)
+		self.cpuLabel = QtGui.QLabel(self.data[1][0], self)
 
 
 	def refreshData(self):
 		self.data = self.readerObj.readUsage()
 
-		self.ramUsage.setText(str(self.data[0][1]))
-		self.cpuUsage.setText(str(self.data[1][1]))
+	def paintEvent(self,event):
+		qp = QtGui.QPainter()
+		qp.begin(self)
+		self.refreshData()
+		self.draw(event,qp,40,100, self.data[0][1])
+		self.draw(event,qp,195,100, self.data[1][1])
+		qp.end()
 
-	def initDataViz(self):
-		pass
+	def draw(self, event, qp, x, y, percentage):
+		w=100
+		h=100
+		startA=0
+		spanA=percentage
+		qp.setRenderHint(QtGui.QPainter.Antialiasing)
+
+		qp.setPen(QtCore.Qt.red)
+		self.drawPiePiece(event, x, y, w, h, startA, spanA, qp)
+
+		spanA=-(360-spanA)
+		qp.setPen(QtCore.Qt.green)
+		self.drawPiePiece(event, x, y, w, h, startA, spanA, qp)
+
+	def drawPiePiece(self, event, x, y, w, h, startA, spanA, qp):
+		spanA=spanA*16
+		qp.drawPie(x, y, w, h, startA, spanA)
 
 	def mousePressEvent(self, event):
 		self.offset = event.pos()
@@ -113,7 +121,6 @@ class Viewer(QtGui.QWidget):
 		y_w = self.offset.y()
 		self.move(x-x_w, y-y_w)
 		
-
 
 
 def main(readerObj):
