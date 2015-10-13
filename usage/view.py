@@ -19,8 +19,8 @@ class Viewer(QtGui.QWidget):
 
 		self.initData()
 
-		self.ramLabel.move(80, 60)
-		self.cpuLabel.move(236,60)	
+		self.ramLabel.move(80, 45)
+		self.cpuLabel.move(236,45)
 
 		refreshBtn = QtGui.QPushButton('Refresh',self)
 		quitBtn = QtGui.QPushButton('Quit',self)
@@ -29,7 +29,7 @@ class Viewer(QtGui.QWidget):
 		refreshBtn.setToolTip('Cmd+R')
 		quitBtn.setToolTip('Cmd+Q')
 		refreshBtn.move(210, 250)
-		quitBtn.move(55,250)
+		quitBtn.move(50,250)
 
 		quitBtn.clicked.connect(QtCore.QCoreApplication.instance().quit)
 		refreshBtn.clicked.connect(self.update) 
@@ -89,25 +89,25 @@ class Viewer(QtGui.QWidget):
 		qp = QtGui.QPainter()
 		qp.begin(self)
 		self.refreshData()
-		self.draw(event,qp,35,100, self.data[0][1])
-		self.draw(event,qp,190,100, self.data[1][1])
+		self.draw(event,qp,25,90, self.data[0][1])
+		self.draw(event,qp,180,90, self.data[1][1])
 		qp.end()
 
 	def draw(self, event, qp, x, y, percentage):
-		w=120
-		h=120
-		startA=0
+		w=135
+		h=135
+		startA=180*16
 		spanA=percentage*16
 
 		qp.setRenderHint(QtGui.QPainter.Antialiasing)
 
-		qp.setPen(QtCore.Qt.red)
-		qp.setBrush( QtCore.Qt.red)
-		qp.drawPie(QtCore.QRect(x, y, w, h ), startA, spanA)
+		qp.setPen(QtGui.QColor(0,0,0,0))
+		qp.setBrush( QtGui.QColor(50,120,200,255))
+		qp.drawPie(QtCore.QRect(x, y, w, h ), startA, -spanA)
 
-		qp.setPen(QtCore.Qt.green)
-		qp.setBrush( QtCore.Qt.green)
-		qp.drawPie(QtCore.QRect(x, y, w, h ), startA, -(360-percentage)*16)
+		qp.setPen(QtGui.QColor(0,0,0,0))
+		qp.setBrush( QtGui.QColor(10,10,10,160))
+		qp.drawPie(QtCore.QRect(x, y, w, h ), startA, (360-percentage)*16)
 
 	def mousePressEvent(self, event):
 		self.offset = event.pos()
