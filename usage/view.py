@@ -101,12 +101,12 @@ class Viewer(QtGui.QWidget):
 
 		qp.setRenderHint(QtGui.QPainter.Antialiasing)
 
-		qp.setPen(QtGui.QColor(0,0,0,0))
+		qp.setPen(QtGui.QColor(50,120,200,255))
 		qp.setBrush( QtGui.QColor(50,120,200,255))
 		qp.drawPie(QtCore.QRect(x, y, w, h ), startA, -spanA)
 
-		qp.setPen(QtGui.QColor(0,0,0,0))
-		qp.setBrush( QtGui.QColor(10,10,10,160))
+		#qp.setPen(QtGui.QColor(0,0,0,0))
+		qp.setBrush( QtGui.QColor(10,10,10,0))
 		qp.drawPie(QtCore.QRect(x, y, w, h ), startA, (360-percentage)*16)
 
 	def mousePressEvent(self, event):
