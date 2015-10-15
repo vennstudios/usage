@@ -4,10 +4,8 @@ from PySide import QtGui, QtCore
 
 class Viewer(QtGui.QWidget):
 
-	def __init__(self,readerObj):	
+	def __init__(self):	
 		super(Viewer, self).__init__()
-		
-		self.readerObj = readerObj
 
 		self.initUI()
 
@@ -83,7 +81,7 @@ class Viewer(QtGui.QWidget):
 
 
 	def refreshData(self):
-		self.data = self.readerObj.readUsage()
+		self.data = controller.readUsage()
 
 	def paintEvent(self,event):
 		qp = QtGui.QPainter()
@@ -120,10 +118,10 @@ class Viewer(QtGui.QWidget):
 		
 
 
-def main(readerObj):
+def main():
 
 	app = QtGui.QApplication(sys.argv)
-	win = Viewer(readerObj)
+	win = Viewer()
 	sys.exit(app.exec_())
 
 if __name__ == '__main__':
